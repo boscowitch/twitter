@@ -26,4 +26,15 @@ Trait MediaTrait {
 		return $this->post('media/upload', $parameters, true);
 	}
 
+	public function checkMedia($mediaId)
+	{
+	    $parameter = [
+	        'command' => 'STATUS',
+            'media_id' => $mediaId
+        ];
+
+	    return $this->setCustomHost(
+	        $this->tconfig['UPLOAD_URL']
+        )->get('media/upload', $parameter);
+	}
 }

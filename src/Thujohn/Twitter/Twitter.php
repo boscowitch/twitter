@@ -55,6 +55,8 @@ class Twitter extends tmhOAuth {
 
 	private $error;
 
+	private $customHost;
+
 	public function __construct(Config $config, SessionStore $session)
 	{
 		if ($config->has('ttwitter::config'))
@@ -94,6 +96,8 @@ class Twitter extends tmhOAuth {
 
 		$config = array_merge($this->parent_config, $this->tconfig);
 
+        $this->customHost = null;
+
 		parent::__construct($this->parent_config);
 	}
 
@@ -112,6 +116,13 @@ class Twitter extends tmhOAuth {
 		parent::reconfigure($config);
 
 		return $this;
+	}
+
+	public function setCustomHost($host)
+	{
+        $this->customHost = $host;
+
+        return $this;
 	}
 
 	private function log($message)
@@ -229,10 +240,9 @@ class Twitter extends tmhOAuth {
 
 	public function query($name, $requestMethod = 'GET', $parameters = [], $multipart = false, $extension = 'json')
 	{
-		$this->config['host'] = $this->tconfig['API_URL'];
+		$this->config['host'] = $this->customHost ? : $this->tconfig['API_URL'];
 
-		if ($multipart)
-		{
+        if (!$this->customHost && $multipart) {
 			$this->config['host'] = $this->tconfig['UPLOAD_URL'];
 		}
 
@@ -277,19 +287,19 @@ class Twitter extends tmhOAuth {
 		{
 			$_response = $this->jsonDecode($response['response'], true);
 
-            if (is_array($_response))
-            {
-                if (array_key_exists('errors', $_response)) {
-                    $error_code = $_response['errors'][0]['code'];
-                    $error_msg  = $_response['errors'][0]['message'];
-                } else if (array_key_exists('error', $_response)) {
-                    $error_code = $response['code'];
-                    $error_msg  = $_response['error'];
-                } else {
-                    $error_code = $response['code'];
-                    $error_msg  = $response['error'];
-                }
-            }
+			if (is_array($_response))
+			{
+				if (array_key_exists('errors', $_response))
+				{
+					$error_code = $_response['errors'][0]['code'];
+					$error_msg  = $_response['errors'][0]['message'];
+				}
+				else
+				{
+					$error_code = $response['code'];
+					$error_msg  = $response['error'];
+				}
+			}
 			else
 			{
 				$error_code = $response['code'];
@@ -314,6 +324,8 @@ class Twitter extends tmhOAuth {
 			case 'array'  : $response = $this->jsonDecode($response['response'], true);
 			break;
 		}
+
+		$this->setCustomHost(null);
 
 		return $response;
 	}
