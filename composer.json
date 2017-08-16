@@ -1,9 +1,13 @@
 {
-    "name": "thujohn/twitter",
-    "description": "Twitter API for Laravel",
+    "name": "nanosch/twitter",
+    "description": "Twitter API for Laravel – fork from thujohn/twitter",
 	"keywords": ["twitter", "laravel", "laravel4", "laravel5"],
     "license": "MIT",
     "authors": [
+        {
+            "name": "thujohn",
+            "email": "jonathan.thuau@gmail.com"
+        },
         {
             "name": "thujohn",
             "email": "jonathan.thuau@gmail.com"
