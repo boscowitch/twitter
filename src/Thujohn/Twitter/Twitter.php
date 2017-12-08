@@ -312,22 +312,25 @@ class Twitter extends tmhOAuth
             throw new RunTimeException('[' . $error_code . '] ' . $error_msg, $response['code']);
         }
 
+
         switch ($format) {
             default :
             case 'object' :
-                $response = $this->jsonDecode($response['response']);
+                $response_converted = $this->jsonDecode($response['response']);
                 break;
             case 'json'   :
-                $response = $response['response'];
+                $response_converted = $response['response'];
                 break;
             case 'array'  :
-                $response = $this->jsonDecode($response['response'], true);
+                $response_converted = $this->jsonDecode($response['response'], true);
                 break;
         }
 
+        $result = new TwitterResult($response_converted, $response['header']);
+
         $this->setCustomHost(null);
 
-        return $response;
+        return $result;
     }
 
     public function get($name, $parameters = [], $multipart = false, $extension = 'json')
