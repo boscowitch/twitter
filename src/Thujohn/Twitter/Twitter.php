@@ -326,7 +326,7 @@ class Twitter extends tmhOAuth
                 break;
         }
 
-        $result = new TwitterResult($response_converted, $response['header']);
+        $result = new TwitterResult($response_converted, $response['headers']);
 
         $this->setCustomHost(null);
 
