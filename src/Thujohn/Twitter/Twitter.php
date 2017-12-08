@@ -63,7 +63,7 @@ class Twitter extends tmhOAuth
 
     public function __construct(Config $config, SessionStore $session)
     {
-        $this->app_only = true;
+        $this->app_only = false;
 
 
         if ($config->has('ttwitter::config')) {
@@ -90,8 +90,6 @@ class Twitter extends tmhOAuth
             if (is_array($access_token) && isset($access_token['oauth_token']) && isset($access_token['oauth_token_secret']) && !empty($access_token['oauth_token']) && !empty($access_token['oauth_token_secret'])) {
                 $this->parent_config['token'] = $access_token['oauth_token'];
                 $this->parent_config['secret'] = $access_token['oauth_token_secret'];
-
-                $this->app_only = false;
             }
         }
 
@@ -105,6 +103,12 @@ class Twitter extends tmhOAuth
         parent::__construct($this->parent_config);
     }
 
+
+    public function setAppOnly($mode)
+    {
+        $this->app_only = $mode;
+    }
+
     /**
      * Set new config values for the OAuth class like different tokens.
      *
@@ -114,13 +118,6 @@ class Twitter extends tmhOAuth
      */
     public function reconfig($config)
     {
-
-        if (empty($config['token'])) {
-            $this->app_only = true;
-        } else {
-            $this->app_only = false;
-        }
-
         // The consumer key and secret must always be included when reconfiguring
         $config = array_merge($this->parent_config, $config);
 
