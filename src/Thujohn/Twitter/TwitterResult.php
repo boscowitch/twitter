@@ -12,13 +12,24 @@ namespace Thujohn\Twitter;
 class TwitterResult
 {
 
-    public $result;
-    public $header;
+    private $result;
+    private $header;
 
     public function __construct($result, $header)
     {
         $this->result = $result;
         $this->header = $header;
+    }
+
+
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    public function getHeader()
+    {
+        return $this->header;
     }
 
 }
